@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xdbypass</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        h1 { margin-bottom: 15px; font-size: 1.6rem; color: #38bdf8; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: #0f172a;
+            color: #fff;
+            margin-bottom: 12px;
+            outline: none;
+        }
+        input:focus { border-color: #38bdf8; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #res { margin-top: 18px; word-break: break-all; }
+        .btn-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #10b981;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .err { color: #f43f5e; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>xdbypass</h1>
+        <input type="text" id="urlInput" placeholder="Pega tu enlace de Lootlabs aquí">
+        <button onclick="desbloquear()">Bypass</button>
+        <div id="res"></div>
+    </div>
+
+    <script>
+        async function desbloquear() {
+            const url = document.getElementById('urlInput').value.trim();
+            const resDiv = document.getElementById('res');
+            if(!url) return resDiv.innerHTML = '<span class="err">Ingresa un enlace.</span>';
+            resDiv.innerText = 'Procesando...';
+
+            try {
+                const r = await fetch('/api/bypass', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                const d = await r.json();
+
+                if(d.success) {
+                    resDiv.innerHTML = `<a href="${d.targetUrl}" target="_blank" class="btn-link">Abrir Enlace Final</a>`;
+                } else {
+                    resDiv.innerHTML = `<span class="err">${d.error}</span>`;
+                }
+            } catch(e) {
+                resDiv.innerHTML = '<span class="err">Error de conexión con la API.</span>';
+            }
+        }
+    </script>
+</body>
+</html>
