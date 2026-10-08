@@ -12,7 +12,8 @@ app.use(express.static(__dirname));
 app.post('/api/bypass', async (req, res) => {
     const { url } = req.body;
 
-    if (!url || (!url.includes('loot-labs.com') && !url.includes('lootlink.org') && !url.includes('lootdest.org'))) {
+       if (!url || (!url.includes('lootlabs.com') && !url.includes('links.lootlabs.gg') && !url.includes('lootlink.org') && !url.includes('lootdest.org'))) {
+           
         return res.status(400).json({ success: false, error: 'Ingresa una URL válida de Lootlabs o Lootlink' });
     }
 
